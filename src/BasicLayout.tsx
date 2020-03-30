@@ -386,7 +386,7 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
     },
   );
 
-  const paddingStyle = {};
+  const paddingStyle: CSSProperties = {};
   if (RTL) {
     paddingStyle.paddingRight = siderMenuDom
     ? getPaddingLeft(!!hasLeftPadding, collapsed, siderWidth)
