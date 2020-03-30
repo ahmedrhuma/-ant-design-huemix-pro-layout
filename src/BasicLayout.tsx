@@ -50,6 +50,7 @@ export interface BasicLayoutProps
   onPageChange?: (location?: RouterTypes<Route>['location']) => void;
 
   loading?: boolean;
+  RTL?: boolean;
 
   locale?: localeType;
 
@@ -213,6 +214,7 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
     isChildrenLayout: propsIsChildrenLayout,
     menuDataRender,
     loading,
+    RTL,
     ...rest
   } = props;
 
@@ -384,11 +386,21 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
     },
   );
 
+  const paddingStyle = {};
+  if (RTL) {
+    paddingStyle.paddingRight = siderMenuDom
+    ? getPaddingLeft(!!hasLeftPadding, collapsed, siderWidth)
+    : undefined;
+  }
+  else {
+    paddingStyle.paddingLeft = siderMenuDom
+      ? getPaddingLeft(!!hasLeftPadding, collapsed, siderWidth)
+      : undefined;
+  }
+
   // siderMenuDom 为空的时候，不需要 padding
   const genLayoutStyle: CSSProperties = {
-    paddingLeft: siderMenuDom
-      ? getPaddingLeft(!!hasLeftPadding, collapsed, siderWidth)
-      : undefined,
+    ...paddingStyle,
     position: 'relative',
   };
 
