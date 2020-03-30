@@ -9,7 +9,7 @@ import {
 import { Button, Divider, Drawer, List, Switch, message, Alert } from 'antd';
 import { createBrowserHistory } from 'history';
 import { stringify, parse } from 'qs';
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useMemo, useState, useEffect, useRef } from 'react';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import useMergeValue from 'use-merge-value';
 import omit from 'omit.js';
@@ -77,249 +77,6 @@ const getDifferentSetting = (state: Partial<Settings>) => {
   return stateObj;
 };
 
-export const getFormatMessage = (): ((data: {
-  id: string;
-  defaultMessage?: string;
-}) => string) => {
-  const formatMessage = ({
-    id,
-    defaultMessage,
-  }: {
-    id: string;
-    defaultMessage?: string;
-  }): string => {
-    const locales = getLocales();
-    if (locales[id]) {
-      return locales[id];
-    }
-    if (defaultMessage) {
-      return defaultMessage as string;
-    }
-    return id;
-  };
-  return formatMessage;
-};
-
-const updateTheme = (
-  dark: boolean,
-  color?: string,
-  hideMessageLoading = false,
-  publicPath = '/theme',
-) => {
-  // ssr
-  if (
-    typeof window === 'undefined' ||
-    !(window as any).umi_plugin_ant_themeVar
-  ) {
-    return;
-  }
-  const formatMessage = getFormatMessage();
-  let hide: any = () => null;
-  if (!hideMessageLoading) {
-    hide = message.loading(
-      formatMessage({
-        id: 'app.setting.loading',
-        defaultMessage: '正在加载主题',
-      }),
-    );
-  }
-
-  const href = dark ? `${publicPath}/dark` : `${publicPath}/`;
-  // 如果是 dark，并且是 color=daybreak，无需进行拼接
-  let colorFileName =
-    dark && color
-      ? `-${encodeURIComponent(color)}`
-      : encodeURIComponent(color || '');
-  if (color === 'daybreak' && dark) {
-    colorFileName = '';
-  }
-
-  const dom = document.getElementById('theme-style') as HTMLLinkElement;
-
-  // 如果这两个都是空
-  if (!href && !colorFileName) {
-    if (dom) {
-      dom.remove();
-      localStorage.removeItem('site-theme');
-    }
-    return;
-  }
-
-  const url = `${href}${colorFileName || ''}.css`;
-  if (dom) {
-    dom.onload = () => {
-      window.setTimeout(() => {
-        hide();
-      });
-    };
-    dom.href = url;
-  } else {
-    const style = document.createElement('link');
-    style.type = 'text/css';
-    style.rel = 'stylesheet';
-    style.id = 'theme-style';
-    style.onload = () => {
-      window.setTimeout(() => {
-        hide();
-      });
-    };
-    style.href = url;
-    if (document.body.append) {
-      document.body.append(style);
-    } else {
-      document.body.appendChild(style);
-    }
-  }
-
-  localStorage.setItem('site-theme', dark ? 'dark' : 'light');
-};
-
-const getThemeList = () => {
-  const formatMessage = getFormatMessage();
-  const list: {
-    key: string;
-    fileName: string;
-    modifyVars: {
-      '@primary-color': string;
-    };
-    theme: 'dark' | 'light';
-  }[] = (window as any).umi_plugin_ant_themeVar || [];
-  const themeList = [
-    {
-      key: 'light',
-      url:
-        'https://gw.alipayobjects.com/zos/antfincdn/NQ%24zoisaD2/jpRkZQMyYRryryPNtyIC.svg',
-      title: formatMessage({ id: 'app.setting.pagestyle.light' }),
-    },
-    {
-      key: 'dark',
-      url:
-        'https://gw.alipayobjects.com/zos/antfincdn/XwFOFbLkSM/LCkqqYNmvBEbokSDscrm.svg',
-      title: formatMessage({
-        id: 'app.setting.pagestyle.dark',
-        defaultMessage: '',
-      }),
-    },
-  ];
-
-  const darkColorList: {
-    key: string;
-    color: string;
-    theme: 'dark' | 'light';
-  }[] = [
-    {
-      key: 'daybreak',
-      color: '#1890ff',
-      theme: 'dark',
-    },
-  ];
-
-  const lightColorList: {
-    key: string;
-    color: string;
-    theme: 'dark' | 'light';
-  }[] = [
-    {
-      key: 'daybreak',
-      color: '#1890ff',
-      theme: 'dark',
-    },
-  ];
-
-  if (list.find(item => item.theme === 'dark')) {
-    themeList.push({
-      key: 'realDark',
-      url:
-        'https://gw.alipayobjects.com/zos/antfincdn/hmKaLQvmY2/LCkqqYNmvBEbokSDscrm.svg',
-      title: formatMessage({
-        id: 'app.setting.pagestyle.dark',
-        defaultMessage: '',
-      }),
-    });
-  }
-  // insert  theme color List
-  list.forEach(item => {
-    const color = (item.modifyVars || {})['@primary-color'];
-    if (item.theme === 'dark' && color) {
-      darkColorList.push({
-        color,
-        ...item,
-      });
-    }
-    if (!item.theme || item.theme === 'light') {
-      lightColorList.push({
-        color,
-        ...item,
-      });
-    }
-  });
-
-  return {
-    colorList: {
-      dark: darkColorList,
-      light: lightColorList,
-    },
-    themeList,
-  };
-};
-
-/**
- * 初始化的时候需要做的工作
- * @param param0
- */
-const initState = (
-  settings: Partial<Settings>,
-  onSettingChange: SettingDrawerProps['onSettingChange'],
-  publicPath?: string,
-) => {
-  if (!isBrowser()) {
-    return;
-  }
-
-  let loadedStyle = false;
-
-  if (window.location.search) {
-    const params = parse(window.location.search.replace('?', ''));
-    const replaceSetting = {};
-    Object.keys(params).forEach(key => {
-      if (defaultSettings[key]) {
-        replaceSetting[key] = params[key];
-      }
-    });
-    if (onSettingChange) {
-      onSettingChange({
-        ...settings,
-        ...replaceSetting,
-      });
-    }
-
-    // 如果 url 中设置主题，进行一次加载。
-    if (oldSetting.navTheme !== params.navTheme && params.navTheme) {
-      updateTheme(
-        settings.navTheme === 'realDark',
-        params.primaryColor,
-        true,
-        publicPath,
-      );
-      loadedStyle = true;
-    }
-  }
-
-  if (loadedStyle) {
-    return;
-  }
-
-  // 如果 url 中没有设置主题，并且 url 中的没有加载，进行一次加载。
-  if (defaultSettings.navTheme !== settings.navTheme && settings.navTheme) {
-    updateTheme(
-      settings.navTheme === 'realDark',
-      settings.primaryColor,
-      true,
-      publicPath,
-    );
-  }
-};
-
 const getParamsFromUrl = (settings: MergerSettingsType<Settings>) => {
   if (!isBrowser()) {
     return defaultSettings;
@@ -361,6 +118,7 @@ const SettingDrawer: React.FC<SettingDrawerProps> = props => {
     hideHintAlert,
     hideCopyButton,
     getContainer,
+    formatMessage,
     RTL,
     onSettingChange,
   } = props;
@@ -385,6 +143,137 @@ const SettingDrawer: React.FC<SettingDrawerProps> = props => {
     layout = 'sidemenu',
     colorWeak,
   } = settingState || {};
+
+  const updateTheme = (
+    dark: boolean,
+    color?: string,
+    hideMessageLoading = false,
+    publicPath = '/theme',
+  ) => {
+    // ssr
+    if (
+      typeof window === 'undefined' ||
+      !(window as any).umi_plugin_ant_themeVar
+    ) {
+      return;
+    }
+    let hide: any = () => null;
+    if (!hideMessageLoading) {
+      hide = message.loading(
+        formatMessage({
+          id: 'app.setting.loading',
+          defaultMessage: '正在加载主题',
+        }),
+      );
+    }
+
+    const href = dark ? `${publicPath}/dark` : `${publicPath}/`;
+    // 如果是 dark，并且是 color=daybreak，无需进行拼接
+    let colorFileName =
+      dark && color
+        ? `-${encodeURIComponent(color)}`
+        : encodeURIComponent(color || '');
+    if (color === 'daybreak' && dark) {
+      colorFileName = '';
+    }
+
+    const dom = document.getElementById('theme-style') as HTMLLinkElement;
+
+    // 如果这两个都是空
+    if (!href && !colorFileName) {
+      if (dom) {
+        dom.remove();
+        localStorage.removeItem('site-theme');
+      }
+      return;
+    }
+
+    const url = `${href}${colorFileName || ''}.css`;
+    if (dom) {
+      dom.onload = () => {
+        window.setTimeout(() => {
+          hide();
+        });
+      };
+      dom.href = url;
+    } else {
+      const style = document.createElement('link');
+      style.type = 'text/css';
+      style.rel = 'stylesheet';
+      style.id = 'theme-style';
+      style.onload = () => {
+        window.setTimeout(() => {
+          hide();
+        });
+      };
+      style.href = url;
+      if (document.body.append) {
+        document.body.append(style);
+      } else {
+        document.body.appendChild(style);
+      }
+    }
+
+    localStorage.setItem('site-theme', dark ? 'dark' : 'light');
+  };
+
+  /**
+ * 初始化的时候需要做的工作
+ * @param param0
+ */
+  const initState = (
+    settings: Partial<Settings>,
+    saveSettingChange: SettingDrawerProps['onSettingChange'],
+    publicPath?: string,
+  ) => {
+    if (!isBrowser()) {
+      return;
+    }
+
+    let loadedStyle = false;
+
+    if (window.location.search) {
+      const params = parse(window.location.search.replace('?', ''));
+      const replaceSetting = {};
+      Object.keys(params).forEach(key => {
+        if (defaultSettings[key]) {
+          replaceSetting[key] = params[key];
+        }
+      });
+      if (saveSettingChange) {
+        saveSettingChange({
+          ...settings,
+          ...replaceSetting,
+        });
+      }
+
+      // 如果 url 中设置主题，进行一次加载。
+      if (oldSetting.navTheme !== params.navTheme && params.navTheme) {
+        updateTheme(
+          settings.navTheme === 'realDark',
+          params.primaryColor,
+          true,
+          publicPath,
+        );
+        loadedStyle = true;
+      }
+    }
+
+    if (loadedStyle) {
+      return;
+    }
+
+    // 如果 url 中没有设置主题，并且 url 中的没有加载，进行一次加载。
+    if (defaultSettings.navTheme !== settings.navTheme && settings.navTheme) {
+      updateTheme(
+        settings.navTheme === 'realDark',
+        settings.primaryColor,
+        true,
+        publicPath,
+      );
+    }
+  };
+
 
   useEffect(() => {
     // 语言修改，这个是和 locale 是配置起来的
@@ -454,8 +343,93 @@ const SettingDrawer: React.FC<SettingDrawerProps> = props => {
     setSettingState(nextState);
   };
 
-  const formatMessage = getFormatMessage();
-  const themeList = getThemeList();
+  const themeList = useMemo(() => {
+    const list: {
+      key: string;
+      fileName: string;
+      modifyVars: {
+        '@primary-color': string;
+      };
+      theme: 'dark' | 'light';
+    }[] = (window as any).umi_plugin_ant_themeVar || [];
+    const themeL = [
+      {
+        key: 'light',
+        url:
+          'https://gw.alipayobjects.com/zos/antfincdn/NQ%24zoisaD2/jpRkZQMyYRryryPNtyIC.svg',
+        title: formatMessage({ id: 'app.setting.pagestyle.light' }),
+      },
+      {
+        key: 'dark',
+        url:
+          'https://gw.alipayobjects.com/zos/antfincdn/XwFOFbLkSM/LCkqqYNmvBEbokSDscrm.svg',
+        title: formatMessage({
+          id: 'app.setting.pagestyle.dark',
+          defaultMessage: '',
+        }),
+      },
+    ];
+
+    const darkColorList: {
+      key: string;
+      color: string;
+      theme: 'dark' | 'light';
+    }[] = [
+      {
+        key: 'daybreak',
+        color: '#1890ff',
+        theme: 'dark',
+      },
+    ];
+
+    const lightColorList: {
+      key: string;
+      color: string;
+      theme: 'dark' | 'light';
+    }[] = [
+      {
+        key: 'daybreak',
+        color: '#1890ff',
+        theme: 'dark',
+      },
+    ];
+
+    if (list.find(item => item.theme === 'dark')) {
+      themeL.push({
+        key: 'realDark',
+        url:
+          'https://gw.alipayobjects.com/zos/antfincdn/hmKaLQvmY2/LCkqqYNmvBEbokSDscrm.svg',
+        title: formatMessage({
+          id: 'app.setting.pagestyle.dark',
+          defaultMessage: '',
+        }),
+      });
+    }
+    // insert  theme color List
+    list.forEach(item => {
+      const color = (item.modifyVars || {})['@primary-color'];
+      if (item.theme === 'dark' && color) {
+        darkColorList.push({
+          color,
+          ...item,
+        });
+      }
+      if (!item.theme || item.theme === 'light') {
+        lightColorList.push({
+          color,
+          ...item,
+        });
+      }
+    });
+
+    return {
+      colorList: {
+        dark: darkColorList,
+        light: lightColorList,
+      },
+      themeList: themeL,
+    };
+  }, []);
 
   useEffect(() => {
     /**
