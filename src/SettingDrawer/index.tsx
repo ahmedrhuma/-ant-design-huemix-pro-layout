@@ -49,6 +49,7 @@ export interface SettingDrawerProps {
   collapse?: boolean;
   getContainer?: any;
   publicPath?: string;
+  RTL?: string;
   hideLoading?: boolean;
   hideColors?: boolean;
   hideHintAlert?: boolean;
@@ -360,6 +361,7 @@ const SettingDrawer: React.FC<SettingDrawerProps> = props => {
     hideHintAlert,
     hideCopyButton,
     getContainer,
+    RTL,
     onSettingChange,
   } = props;
   const firstRender = useRef<boolean>(true);
@@ -488,7 +490,7 @@ const SettingDrawer: React.FC<SettingDrawerProps> = props => {
       visible={show}
       width={300}
       onClose={() => setShow(false)}
-      placement="right"
+      placement={RTL ? "left" : "right"}
       getContainer={getContainer}
       handler={
         <div
