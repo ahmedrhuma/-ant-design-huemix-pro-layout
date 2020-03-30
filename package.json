@@ -13,13 +13,13 @@
     "menu",
     "pro"
   ],
-  "homepage": "https://github.com/ant-design/ant-design-pro-layout#readme",
+  "homepage": "https://github.com/ahmedrhuma/ant-design-huemix-pro-layout#readme",
   "bugs": {
     "url": "https://github.com/ant-design/ant-design-pro-layout/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ant-design/ant-design-pro-layout"
+    "url": "git+https://github.com/ahmedrhuma/ant-design-huemix-pro-layout"
   },
   "license": "MIT",
   "author": "qixian.cs@outlook.com",
