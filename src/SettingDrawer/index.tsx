@@ -54,7 +54,7 @@ export interface SettingDrawerProps {
   hideColors?: boolean;
   hideHintAlert?: boolean;
   hideCopyButton?: boolean;
-  formatMessage?: (data: {
+  formatMessage: (data: {
     id: string;
     defaultMessage?: string;
   }) => string;
