@@ -15,9 +15,9 @@ An out-of-box UI solution for enterprise applications as a React boilerplate. Th
 ## Usage
 
 ```bash
-npm i @ant-design/pro-layout --save
+npm i @ant-design/huemix-pro-layout --save
 // or
-yarn add @ant-design/pro-layout
+yarn add @ant-design/huemix-pro-layout
 ```
 
 ```jsx | pure
