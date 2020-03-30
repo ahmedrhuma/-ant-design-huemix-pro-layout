@@ -54,7 +54,10 @@ export interface SettingDrawerProps {
   hideColors?: boolean;
   hideHintAlert?: boolean;
   hideCopyButton?: boolean;
-  formatMessage?: ({ id: string }) => void;
+  formatMessage?: (data: {
+    id: string;
+    defaultMessage?: string;
+  }) => string;
   onCollapseChange?: (collapse: boolean) => void;
   onSettingChange?: (settings: MergerSettingsType<Settings>) => void;
 }
