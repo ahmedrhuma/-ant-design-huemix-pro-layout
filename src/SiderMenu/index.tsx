@@ -13,6 +13,7 @@ const SiderMenuWrapper: React.FC<SiderMenuProps> = props => {
     isMobile,
     menuData,
     siderWidth,
+    mobileDrawerPosition,
     collapsed,
     onCollapse,
     style,
@@ -52,7 +53,7 @@ const SiderMenuWrapper: React.FC<SiderMenuProps> = props => {
   return isMobile ? (
     <Drawer
       visible={!collapsed}
-      placement="left"
+      placement={mobileDrawerPosition || "left"}
       className={classNames('ant-pro-drawer-sider-menu', className)}
       onClose={() => onCollapse && onCollapse(true)}
       style={{
@@ -79,7 +80,7 @@ const SiderMenuWrapper: React.FC<SiderMenuProps> = props => {
 };
 
 SiderMenuWrapper.defaultProps = {
-  onCollapse: () => undefined,
+  onCollapse: () => undefined
 };
 
 export default SiderMenuWrapper;

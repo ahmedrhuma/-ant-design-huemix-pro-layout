@@ -46,6 +46,9 @@ export const defaultRenderLogoAndTitle = (
   );
 };
 
+declare const PlacementTypes: ["top", "right", "bottom", "left"];
+declare type placementType = typeof PlacementTypes[number];
+
 export interface SiderMenuProps
   extends Pick<BaseMenuProps, Exclude<keyof BaseMenuProps, ['onCollapse']>> {
   logo?: React.ReactNode;
@@ -59,6 +62,7 @@ export interface SiderMenuProps
   >;
   breakpoint?: SiderProps['breakpoint'] | false;
   onMenuHeaderClick?: (e: React.MouseEvent<HTMLDivElement>) => void;
+  mobileDrawerPosition?: placementType;
   hide?: boolean;
   className?: string;
   style?: CSSProperties;
