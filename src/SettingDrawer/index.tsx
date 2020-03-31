@@ -17,7 +17,6 @@ import defaultSettings, { Settings } from '../defaultSettings';
 
 import BlockCheckbox from './BlockCheckbox';
 import ThemeColor from './ThemeColor';
-import getLocales, { getLanguage } from '../locales';
 import { isBrowser, genStringToTheme } from '../utils/utils';
 import LayoutSetting, { renderLayoutSettingItem } from './LayoutChange';
 
@@ -64,7 +63,6 @@ export interface SettingDrawerProps {
 
 export interface SettingDrawerState extends MergerSettingsType<Settings> {
   collapse?: boolean;
-  language?: string;
 }
 
 let oldSetting: MergerSettingsType<Settings> = {};
@@ -132,7 +130,6 @@ const SettingDrawer: React.FC<SettingDrawerProps> = props => {
     value: props.collapse,
     onChange: props.onCollapseChange,
   });
-  const [language, setLanguage] = useState<string>(getLanguage());
   const [settingState, setSettingState] = useMergeValue<Partial<Settings>>(
     () => getParamsFromUrl(propsSettings),
     {
@@ -280,12 +277,6 @@ const SettingDrawer: React.FC<SettingDrawerProps> = props => {
 
 
   useEffect(() => {
-    // 语言修改，这个是和 locale 是配置起来的
-    const onLanguageChange = (): void => {
-      if (language !== getLanguage()) {
-        setLanguage(getLanguage());
-      }
-    };
 
     // 记住默认的选择，方便做 diff，然后保存到 url 参数中
     oldSetting = {
@@ -301,11 +292,6 @@ const SettingDrawer: React.FC<SettingDrawerProps> = props => {
     }
 
     initState(settingState, setSettingState, props.publicPath);
-    window.addEventListener('languagechange', onLanguageChange, {
-      passive: true,
-    });
-
-    return () => window.removeEventListener('languagechange', onLanguageChange);
   }, []);
 
   /**
