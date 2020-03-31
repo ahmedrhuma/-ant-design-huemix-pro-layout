@@ -277,7 +277,7 @@ const SettingDrawer: React.FC<SettingDrawerProps> = props => {
 
 
   // eslint-disable-next-line consistent-return
-  useEffect(() => {
+  useEffect(() : void => {
 
     // 记住默认的选择，方便做 diff，然后保存到 url 参数中
     oldSetting = {
