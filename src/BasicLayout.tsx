@@ -348,6 +348,7 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
     hasSiderMenu: !!siderMenuDom,
     menuData,
     isMobile,
+    RTL,
     collapsed,
     onCollapse,
     theme: (navTheme || 'dark').toLocaleLowerCase().includes('dark')

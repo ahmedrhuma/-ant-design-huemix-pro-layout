@@ -58,6 +58,7 @@ class HeaderView extends Component<HeaderViewProps, HeaderViewState> {
       siderWidth = 256,
       hasSiderMenu,
       headerRender,
+      RTL,
       isMobile,
     } = this.props;
 
@@ -74,6 +75,10 @@ class HeaderView extends Component<HeaderViewProps, HeaderViewState> {
       return null;
     }
 
+    const extra = {};
+    if (RTL) extra.left = fixedHeader ? 0 : undefined;
+    else extra.right = fixedHeader ? 0 : undefined;
+
     return (
       <>
         {fixedHeader && <Header />}
@@ -84,7 +89,7 @@ class HeaderView extends Component<HeaderViewProps, HeaderViewState> {
               ? `calc(100% - ${collapsed ? 80 : siderWidth}px)`
               : '100%',
             zIndex: 9,
-            right: fixedHeader ? 0 : undefined,
+            ...extra,
             ...style,
           }}
           className={className}
