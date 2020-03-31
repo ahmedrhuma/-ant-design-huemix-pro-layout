@@ -293,7 +293,7 @@ const SettingDrawer: React.FC<SettingDrawerProps> = props => {
 
     initState(settingState, setSettingState, props.publicPath);
 
-    return () => undefined;
+    return undefined;
   }, []);
 
   /**
