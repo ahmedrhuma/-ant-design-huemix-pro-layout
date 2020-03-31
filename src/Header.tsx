@@ -1,6 +1,6 @@
 import './Header.less';
 
-import React, { Component } from 'react';
+import React, { Component, CSSProperties } from 'react';
 import classNames from 'classnames';
 import { Layout } from 'antd';
 
@@ -15,6 +15,7 @@ const { Header } = Layout;
 export interface HeaderViewProps extends Partial<Settings>, GlobalHeaderProps {
   isMobile?: boolean;
   collapsed?: boolean;
+  RTL?: boolean;
   logo?: React.ReactNode;
   menuRender?: BasicLayoutProps['menuRender'];
   headerRender?: BasicLayoutProps['headerRender'];
@@ -75,7 +76,7 @@ class HeaderView extends Component<HeaderViewProps, HeaderViewState> {
       return null;
     }
 
-    const extra = {};
+    const extra : CSSProperties = {} ;
     if (RTL) extra.left = fixedHeader ? 0 : undefined;
     else extra.right = fixedHeader ? 0 : undefined;
 
