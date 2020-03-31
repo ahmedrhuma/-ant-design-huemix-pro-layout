@@ -9,7 +9,7 @@ import {
 import { Button, Divider, Drawer, List, Switch, message, Alert } from 'antd';
 import { createBrowserHistory } from 'history';
 import { stringify, parse } from 'qs';
-import React, { useMemo, useEffect, useRef } from 'react';
+import React, { useMemo, useState, useEffect, useRef } from 'react';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import useMergeValue from 'use-merge-value';
 import omit from 'omit.js';
@@ -276,8 +276,8 @@ const SettingDrawer: React.FC<SettingDrawerProps> = props => {
   };
 
 
-  // eslint-disable-next-line consistent-return
   useEffect(() => {
+
     // 记住默认的选择，方便做 diff，然后保存到 url 参数中
     oldSetting = {
       ...defaultSettings,
@@ -292,6 +292,7 @@ const SettingDrawer: React.FC<SettingDrawerProps> = props => {
     }
 
     initState(settingState, setSettingState, props.publicPath);
+
     return () => null;
   }, []);
 
