@@ -289,7 +289,7 @@ const SettingDrawer: React.FC<SettingDrawerProps> = props => {
      * 如果不是浏览器 都没有必要做了
      */
     if (!isBrowser()) {
-      return () => null;
+      return;
     }
 
     initState(settingState, setSettingState, props.publicPath);
