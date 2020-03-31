@@ -9,7 +9,7 @@ import {
 import { Button, Divider, Drawer, List, Switch, message, Alert } from 'antd';
 import { createBrowserHistory } from 'history';
 import { stringify, parse } from 'qs';
-import React, { useMemo, useState, useEffect, useRef } from 'react';
+import React, { useMemo, useEffect, useRef } from 'react';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import useMergeValue from 'use-merge-value';
 import omit from 'omit.js';
@@ -293,7 +293,7 @@ const SettingDrawer: React.FC<SettingDrawerProps> = props => {
 
     initState(settingState, setSettingState, props.publicPath);
 
-    return () => null;
+    return () => undefined;
   }, []);
 
   /**
