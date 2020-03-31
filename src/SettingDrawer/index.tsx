@@ -506,6 +506,7 @@ const SettingDrawer: React.FC<SettingDrawerProps> = props => {
           <BlockCheckbox
             list={themeList.themeList}
             value={navTheme}
+            formatMessage={formatMessage}
             onChange={value => changeSetting('navTheme', value, hideLoading)}
           />
         </Body>
@@ -526,6 +527,7 @@ const SettingDrawer: React.FC<SettingDrawerProps> = props => {
 
         <Body title={formatMessage({ id: 'app.setting.navigationmode' })}>
           <BlockCheckbox
+            formatMessage={formatMessage}
             value={layout}
             onChange={value => changeSetting('layout', value, hideLoading)}
           />

@@ -7,6 +7,10 @@ import { getFormatMessage } from './index';
 export interface BlockCheckboxProps {
   value: string;
   onChange: (key: string) => void;
+  formatMessage: (data: {
+    id: string;
+    defaultMessage?: string;
+  }) => string;
   list?: {
     title: string;
     key: string;
@@ -19,9 +23,9 @@ const baseClassName = 'ant-pro-setting-drawer-block-checbox';
 const BlockCheckbox: React.FC<BlockCheckboxProps> = ({
   value,
   onChange,
+  formatMessage,
   list: propsList,
 }) => {
-  const formatMessage = getFormatMessage();
 
   const list = propsList || [
     {
