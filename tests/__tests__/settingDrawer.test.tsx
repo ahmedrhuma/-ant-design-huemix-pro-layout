@@ -4,11 +4,11 @@ import SettingDrawer, { SettingDrawerProps } from '../../src/SettingDrawer';
 import defaultSettings from './defaultSettings';
 import { waitForComponentToPaint } from './util';
 
-const getFormatMessage = (): ((data: {
+const formatMessage = (): ((data: {
   id: string;
   defaultMessage?: string;
 }) => string) => {
-  const formatMessage = ({
+  const fm = ({
     id,
     defaultMessage,
   }: {
@@ -24,7 +24,7 @@ const getFormatMessage = (): ((data: {
     }
     return id;
   };
-  return formatMessage;
+  return fm;
 };
 
 describe('settingDrawer.test', () => {
@@ -48,7 +48,7 @@ describe('settingDrawer.test', () => {
       <SettingDrawer
         settings={defaultSettings}
         getContainer={false}
-        getFormatMessage={getFormatMessage}
+        formatMessage={formatMessage}
         collapse
       />,
     );
@@ -60,7 +60,7 @@ describe('settingDrawer.test', () => {
       <SettingDrawer
         settings={undefined as any}
         getContainer={false}
-        getFormatMessage={getFormatMessage}
+        formatMessage={formatMessage}
         collapse
       />,
     );
@@ -71,7 +71,7 @@ describe('settingDrawer.test', () => {
     const html = render(
       <SettingDrawer
         settings={defaultSettings}
-        getFormatMessage={getFormatMessage}
+        formatMessage={formatMessage}
         hideColors
         getContainer={false}
         collapse
@@ -85,7 +85,7 @@ describe('settingDrawer.test', () => {
       <SettingDrawer
         settings={defaultSettings}
         hideHintAlert
-        getFormatMessage={getFormatMessage}
+        formatMessage={formatMessage}
         getContainer={false}
         collapse
       />,
@@ -97,7 +97,7 @@ describe('settingDrawer.test', () => {
     const html = render(
       <SettingDrawer
         settings={defaultSettings}
-        getFormatMessage={getFormatMessage}
+        formatMessage={formatMessage}
         hideLoading
         getContainer={false}
         collapse
@@ -110,7 +110,7 @@ describe('settingDrawer.test', () => {
     const html = render(
       <SettingDrawer
         settings={defaultSettings}
-        getFormatMessage={getFormatMessage}
+        formatMessage={formatMessage}
         hideCopyButton
         getContainer={false}
         collapse
@@ -124,7 +124,7 @@ describe('settingDrawer.test', () => {
     const wrapper = mount(
       <SettingDrawer
         settings={defaultSettings}
-        getFormatMessage={getFormatMessage}
+        formatMessage={formatMessage}
         collapse
         getContainer={false}
         onCollapseChange={onCollapseChange}
