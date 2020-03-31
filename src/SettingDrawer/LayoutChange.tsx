@@ -1,7 +1,7 @@
 import React from 'react';
 import { List, Tooltip, Select, Switch } from 'antd';
 import defaultSettings, { Settings } from '../defaultSettings';
-import { getFormatMessage, SettingItemProps } from './index';
+import { SettingItemProps } from './index';
 
 export const renderLayoutSettingItem = (item: SettingItemProps) => {
   const action = React.cloneElement(item.action, {
@@ -17,9 +17,12 @@ export const renderLayoutSettingItem = (item: SettingItemProps) => {
 };
 const LayoutSetting: React.FC<{
   settings: Partial<Settings>;
+  formatMessage: (data: {
+    id: string;
+    defaultMessage?: string;
+  }) => string;
   changeSetting: (key: string, value: any, hideLoading?: boolean) => void;
-}> = ({ settings = {}, changeSetting }) => {
-  const formatMessage = getFormatMessage();
+}> = ({ formatMessage, settings = {}, changeSetting }) => {
   const { contentWidth, fixedHeader, layout, fixSiderbar } =
     settings || defaultSettings;
   return (

@@ -530,7 +530,7 @@ const SettingDrawer: React.FC<SettingDrawerProps> = props => {
             onChange={value => changeSetting('layout', value, hideLoading)}
           />
         </Body>
-        <LayoutSetting settings={settingState} changeSetting={changeSetting} />
+        <LayoutSetting formatMessage={formatMessage} settings={settingState} changeSetting={changeSetting} />
         <Divider />
 
         <Body title={formatMessage({ id: 'app.setting.othersettings' })}>
