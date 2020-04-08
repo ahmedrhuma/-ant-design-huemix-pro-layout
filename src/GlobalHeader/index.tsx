@@ -2,7 +2,7 @@ import './index.less';
 
 import React, { Component } from 'react';
 import classNames from 'classnames';
-import { MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons';
+import { FullscreenOutlined, FullscreenExitOutlined, MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons';
 import { HeaderViewProps } from '../Header';
 import { defaultRenderLogo, SiderMenuProps } from '../SiderMenu/SiderMenu';
 import { isBrowser } from '../utils/utils';
@@ -38,6 +38,10 @@ const renderLogo = (
 };
 
 export default class GlobalHeader extends Component<GlobalHeaderProps> {
+  state = {
+    fullscreen: false
+  };
+
   triggerResizeEvent = () => {
     if (isBrowser()) {
       const event = document.createEvent('HTMLEvents');
@@ -70,6 +74,31 @@ export default class GlobalHeader extends Component<GlobalHeaderProps> {
     return null;
   };
 
+  requestFullScreen = () => {
+    const element = document.getElementById('root');
+    // Supports most browsers and their versions.
+    const requestMethod = element.requestFullScreen || element.webkitRequestFullScreen || element.mozRequestFullScreen || element.msRequestFullScreen;
+
+    if (requestMethod) { // Native full screen.
+        requestMethod.call(element);
+    } else if (typeof window.ActiveXObject !== "undefined") { // Older IE.
+        // eslint-disable-next-line no-undef
+        const wscript = new ActiveXObject("WScript.Shell");
+        if (wscript !== null) {
+            wscript.SendKeys("{F11}");
+        }
+    }
+
+    // eslint-disable-next-line react/no-access-state-in-setstate
+    this.setState({ fullscreen: !this.state.fullscreen });
+  }
+
+  fullScreenButton = () => <span className="ant-pro-global-header-trigger" onClick={this.requestFullScreen}>
+    {this.renderFullScreenButton()}
+  </span>;
+
+  renderFullScreenButton = () => this.state.fullscreen ? <FullscreenExitOutlined /> : <FullscreenOutlined />;
+
   render(): React.ReactNode {
     const {
       isMobile,
@@ -90,6 +119,7 @@ export default class GlobalHeader extends Component<GlobalHeaderProps> {
       <div className={className} style={style}>
         {isMobile && renderLogo(menuHeaderRender, logoDom)}
         {this.renderCollapsedButton()}
+        {this.fullScreenButton()}
         <div style={{ flex: 1 }} />
         {rightContentRender && rightContentRender(this.props)}
       </div>

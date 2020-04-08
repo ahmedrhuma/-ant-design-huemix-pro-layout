@@ -154,7 +154,7 @@ const SettingDrawer: React.FC<SettingDrawerProps> = props => {
     // ssr
     if (
       typeof window === 'undefined' ||
-      !(window as any).umi_plugin_ant_themeVar
+      !(window as any).huemix_themes
     ) {
       return;
     }
@@ -342,7 +342,7 @@ const SettingDrawer: React.FC<SettingDrawerProps> = props => {
         '@primary-color': string;
       };
       theme: 'dark' | 'light';
-    }[] = (window as any).umi_plugin_ant_themeVar || [];
+    }[] = (window as any).huemix_themes || [];
     const themeL = [
       {
         key: 'light',
