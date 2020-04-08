@@ -22,6 +22,13 @@ export interface GlobalHeaderProps {
   menuHeaderRender?: SiderMenuProps['menuHeaderRender'];
 }
 
+interface HTMLElement  {
+  msRequestFullscreen?: () => Promise<void>;
+  mozRequestFullscreen?: () => Promise<void>;
+  webkitRequestFullscreen?: () => Promise<void>;
+  requestFullscreen?: () => Promise<void>;
+}
+
 const defaultRenderCollapsedButton = (collapsed?: boolean) =>
   collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />;
 
@@ -76,7 +83,7 @@ export default class GlobalHeader extends Component<GlobalHeaderProps> {
   };
 
   requestFullScreen = () => {
-    const element = document.getElementById('root');
+    const element = document.getElementById('root') : Document;
     // Supports most browsers and their versions.
     const requestMethod = element.requestFullscreen || element.webkitRequestFullScreen || element.mozRequestFullScreen || element.msRequestFullScreen;
 
