@@ -12,6 +12,7 @@ export interface GlobalHeaderProps {
   collapsed?: boolean;
   onCollapse?: (collapsed: boolean) => void;
   isMobile?: boolean;
+  fullScreenButton?: boolean;
   logo?: React.ReactNode;
   menuRender?: HeaderViewProps['menuRender'];
   collapsedButtonRender?: WithFalse<(collapsed?: boolean) => React.ReactNode>;
@@ -77,7 +78,7 @@ export default class GlobalHeader extends Component<GlobalHeaderProps> {
   requestFullScreen = () => {
     const element = document.getElementById('root');
     // Supports most browsers and their versions.
-    const requestMethod = element.requestFullScreen || element.webkitRequestFullScreen || element.mozRequestFullScreen || element.msRequestFullScreen;
+    const requestMethod = element.requestFullscreen || element.webkitRequestFullScreen || element.mozRequestFullScreen || element.msRequestFullScreen;
 
     if (requestMethod) { // Native full screen.
         requestMethod.call(element);
@@ -107,6 +108,7 @@ export default class GlobalHeader extends Component<GlobalHeaderProps> {
       menuHeaderRender,
       className: propClassName,
       style,
+      fullScreenButton
     } = this.props;
     const className = classNames(propClassName, 'ant-pro-global-header');
 
@@ -119,7 +121,7 @@ export default class GlobalHeader extends Component<GlobalHeaderProps> {
       <div className={className} style={style}>
         {isMobile && renderLogo(menuHeaderRender, logoDom)}
         {this.renderCollapsedButton()}
-        {this.fullScreenButton()}
+        {fullScreenButton ? this.fullScreenButton() : null}
         <div style={{ flex: 1 }} />
         {rightContentRender && rightContentRender(this.props)}
       </div>
