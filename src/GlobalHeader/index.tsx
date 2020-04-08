@@ -22,13 +22,6 @@ export interface GlobalHeaderProps {
   menuHeaderRender?: SiderMenuProps['menuHeaderRender'];
 }
 
-interface HTMLElement  {
-  msRequestFullscreen?: () => Promise<void>;
-  mozRequestFullscreen?: () => Promise<void>;
-  webkitRequestFullscreen?: () => Promise<void>;
-  requestFullscreen?: () => Promise<void>;
-}
-
 const defaultRenderCollapsedButton = (collapsed?: boolean) =>
   collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />;
 
@@ -83,13 +76,13 @@ export default class GlobalHeader extends Component<GlobalHeaderProps> {
   };
 
   requestFullScreen = () => {
-    const element : Document = document.getElementById('root');
+    const element : any = document.getElementById('root');
     // Supports most browsers and their versions.
     const requestMethod = element.requestFullscreen || element.webkitRequestFullScreen || element.mozRequestFullScreen || element.msRequestFullScreen;
 
     if (requestMethod) { // Native full screen.
         requestMethod.call(element);
-    } else if (typeof window.ActiveXObject !== "undefined") { // Older IE.
+    } else if (typeof window !== "undefined") { // Older IE.
         // eslint-disable-next-line no-undef
         const wscript = new ActiveXObject("WScript.Shell");
         if (wscript !== null) {
