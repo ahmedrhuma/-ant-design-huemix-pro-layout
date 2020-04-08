@@ -83,7 +83,7 @@ export default class GlobalHeader extends Component<GlobalHeaderProps> {
   };
 
   requestFullScreen = () => {
-    const element = document.getElementById('root') : Document;
+    const element : Document = document.getElementById('root');
     // Supports most browsers and their versions.
     const requestMethod = element.requestFullscreen || element.webkitRequestFullScreen || element.mozRequestFullScreen || element.msRequestFullScreen;
 
