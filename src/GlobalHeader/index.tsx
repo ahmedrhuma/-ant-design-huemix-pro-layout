@@ -86,7 +86,7 @@ export default class GlobalHeader extends Component<GlobalHeaderProps> {
 
     if (requestMethod) { // Native full screen.
         requestMethod.call(element);
-    } else if (typeof window !== "undefined") { // Older IE.
+    } else if (typeof window['ActiveXObject'] !== "undefined") { // Older IE.
         // eslint-disable-next-line no-undef
         const wscript = new ActiveXObject("WScript.Shell");
         if (wscript !== null) {
