@@ -76,7 +76,7 @@ export default class GlobalHeader extends Component<GlobalHeaderProps> {
   };
 
   requestFullScreen = () => {
-    const isInFullScreen = (document.fullscreenElement && document.fullscreenElement !== null) ||
+    const isInFullScreen : any = (document.fullscreenElement && document.fullscreenElement !== null) ||
       (document.webkitFullscreenElement && document.webkitFullscreenElement !== null) ||
       (document.mozFullScreenElement && document.mozFullScreenElement !== null) ||
       (document.msFullscreenElement && document.msFullscreenElement !== null);
