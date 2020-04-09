@@ -90,7 +90,7 @@ export default class GlobalHeader extends Component<GlobalHeaderProps> {
     else requestMethod = element.requestFullscreen || element.webkitRequestFullScreen || element.mozRequestFullScreen || element.msRequestFullScreen;
 
     if (requestMethod) { // Native full screen.
-        if (isInFullScreen) requestMethod();
+        if (isInFullScreen) requestMethod.call(document);
         else requestMethod.call(element);
     } else if (typeof window['ActiveXObject'] !== "undefined") { // Older IE.
         // eslint-disable-next-line no-undef
