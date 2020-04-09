@@ -76,16 +76,16 @@ export default class GlobalHeader extends Component<GlobalHeaderProps> {
   };
 
   requestFullScreen = () => {
-    const isInFullScreen : any = (document.fullscreenElement && document.fullscreenElement !== null) ||
-      (document.webkitFullscreenElement && document.webkitFullscreenElement !== null) ||
-      (document.mozFullScreenElement && document.mozFullScreenElement !== null) ||
-      (document.msFullscreenElement && document.msFullscreenElement !== null);
+    const isInFullScreen : any = (document['fullscreenElement'] && document['fullscreenElement'] !== null) ||
+      (document['webkitFullscreenElement'] && document['webkitFullscreenElement'] !== null) ||
+      (document['mozFullScreenElement'] && document['mozFullScreenElement'] !== null) ||
+      (document['msFullscreenElement'] && document['msFullscreenElement'] !== null);
 
     const element : any = document.getElementById('root');
     // Supports most browsers and their versions.
     let requestMethod;
     if (isInFullScreen){
-      requestMethod = document.exitFullscreen || document.webkitExitFullscreen || document.mozCancelFullScreen || document.msExitFullscreen;
+      requestMethod = document['exitFullscreen'] || document['webkitExitFullscreen'] || document['mozCancelFullScreen'] || document['msExitFullscreen'];
     }
     else requestMethod = element.requestFullscreen || element.webkitRequestFullScreen || element.mozRequestFullScreen || element.msRequestFullScreen;
 
