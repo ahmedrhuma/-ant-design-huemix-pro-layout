@@ -76,11 +76,16 @@ export default class GlobalHeader extends Component<GlobalHeaderProps> {
   };
 
   requestFullScreen = () => {
+    const isInFullScreen = (document.fullscreenElement && document.fullscreenElement !== null) ||
+      (document.webkitFullscreenElement && document.webkitFullscreenElement !== null) ||
+      (document.mozFullScreenElement && document.mozFullScreenElement !== null) ||
+      (document.msFullscreenElement && document.msFullscreenElement !== null);
+
     const element : any = document.getElementById('root');
     // Supports most browsers and their versions.
     let requestMethod;
-    if (this.state.fullscreen){
-      requestMethod = element.exitFullscreen || element.webkitExitFullscreen || element.mozCancelFullScreen || element.msExitFullscreen;
+    if (isInFullScreen){
+      requestMethod = document.exitFullscreen || document.webkitExitFullscreen || document.mozCancelFullScreen || document.msExitFullscreen;
     }
     else requestMethod = element.requestFullscreen || element.webkitRequestFullScreen || element.mozRequestFullScreen || element.msRequestFullScreen;
 
@@ -95,7 +100,7 @@ export default class GlobalHeader extends Component<GlobalHeaderProps> {
     }
 
     // eslint-disable-next-line react/no-access-state-in-setstate
-    this.setState({ fullscreen: !this.state.fullscreen });
+    this.setState({ fullscreen: !isInFullScreen });
   }
 
   fullScreenButton = () => <span className="ant-pro-global-header-trigger" onClick={this.requestFullScreen}>
