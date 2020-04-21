@@ -3,7 +3,7 @@ import './BasicLayout.less';
 import React, { CSSProperties, useContext, useEffect } from 'react';
 import { BreadcrumbProps as AntdBreadcrumbProps } from 'antd/es/breadcrumb';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
-import { Layout } from 'antd';
+import { Layout, ConfigProvider } from 'antd';
 import classNames from 'classnames';
 import warning from 'warning';
 import useMergeValue from 'use-merge-value';
@@ -434,7 +434,7 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
   }, [stringify(props.location)]);
 
   return (
-    <>
+    <ConfigProvider direction={RTL ? 'rtl' : 'ltr'}>
       <HelmetProvider>
         <Helmet>
           <title>{pageTitleInfo.title}</title>
@@ -478,7 +478,7 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
           </div>
         </RouteContext.Provider>
       </MenuCounter.Provider>
-    </>
+    </ConfigProvider>
   );
 };
 

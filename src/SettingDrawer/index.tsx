@@ -6,7 +6,7 @@ import {
   SettingOutlined,
 } from '@ant-design/icons';
 
-import { Button, Divider, Drawer, List, Switch, message, Alert } from 'antd';
+import { Button, Divider, Drawer, List, Switch, message, Alert, ConfigProvider } from 'antd';
 import { createBrowserHistory } from 'history';
 import { stringify, parse } from 'qs';
 import React, { useMemo, useEffect, useRef } from 'react';
@@ -48,7 +48,8 @@ export interface SettingDrawerProps {
   collapse?: boolean;
   getContainer?: any;
   publicPath?: string;
-  RTL?: string;
+  RTL?: boolean;
+  defaultHideHandler?: boolean;
   hideLoading?: boolean;
   hideColors?: boolean;
   hideHintAlert?: boolean;
@@ -122,6 +123,7 @@ const SettingDrawer: React.FC<SettingDrawerProps> = props => {
     getContainer,
     formatMessage,
     RTL,
+    defaultHideHandler,
     onSettingChange,
   } = props;
   const firstRender = useRef<boolean>(true);
@@ -451,123 +453,126 @@ const SettingDrawer: React.FC<SettingDrawerProps> = props => {
   }, [JSON.stringify(settingState)]);
 
   return (
-    <Drawer
-      visible={show}
-      width={300}
-      onClose={() => setShow(false)}
-      placement={RTL ? "left" : "right"}
-      getContainer={getContainer}
-      handler={
-        <div
-          className="ant-pro-setting-drawer-handle"
-          onClick={() => setShow(!show)}
-        >
-          {show ? (
-            <CloseOutlined
-              style={{
-                color: '#fff',
-                fontSize: 20,
-              }}
+    <ConfigProvider direction={RTL ? 'rtl' : 'ltr'}>
+      <Drawer
+        visible={show}
+        width={300}
+        onClose={() => setShow(false)}
+        placement={RTL ? "left" : "right"}
+        getContainer={getContainer}
+        handler={
+          <div
+            className="ant-pro-setting-drawer-handle"
+            style={defaultHideHandler ? { display: 'none' } : undefined}
+            onClick={() => setShow(!show)}
+          >
+            {show ? (
+              <CloseOutlined
+                style={{
+                  color: '#fff',
+                  fontSize: 20,
+                }}
+              />
+            ) : (
+              <SettingOutlined
+                style={{
+                  color: '#fff',
+                  fontSize: 20,
+                }}
+              />
+            )}
+          </div>
+        }
+        style={{
+          zIndex: 999,
+        }}
+      >
+        <div className="ant-pro-setting-drawer-content">
+          <Body
+            title={formatMessage({
+              id: 'app.setting.pagestyle',
+              defaultMessage: 'Page style setting',
+            })}
+          >
+            <BlockCheckbox
+              list={themeList.themeList}
+              value={navTheme}
+              formatMessage={formatMessage}
+              onChange={value => changeSetting('navTheme', value, hideLoading)}
             />
-          ) : (
-            <SettingOutlined
-              style={{
-                color: '#fff',
-                fontSize: 20,
-              }}
+          </Body>
+
+          <ThemeColor
+            title={formatMessage({ id: 'app.setting.themecolor' })}
+            value={primaryColor}
+            colors={
+              hideColors
+                ? []
+                : themeList.colorList[navTheme === 'realDark' ? 'dark' : 'light']
+            }
+            formatMessage={formatMessage}
+            onChange={color => changeSetting('primaryColor', color, hideLoading)}
+          />
+
+          <Divider />
+
+          <Body title={formatMessage({ id: 'app.setting.navigationmode' })}>
+            <BlockCheckbox
+              formatMessage={formatMessage}
+              value={layout}
+              onChange={value => changeSetting('layout', value, hideLoading)}
+            />
+          </Body>
+          <LayoutSetting formatMessage={formatMessage} settings={settingState} changeSetting={changeSetting} />
+          <Divider />
+
+          <Body title={formatMessage({ id: 'app.setting.othersettings' })}>
+            <List
+              split={false}
+              renderItem={renderLayoutSettingItem}
+              dataSource={[
+                {
+                  title: formatMessage({ id: 'app.setting.weakmode' }),
+                  action: (
+                    <Switch
+                      size="small"
+                      checked={!!colorWeak}
+                      onChange={checked => changeSetting('colorWeak', checked)}
+                    />
+                  ),
+                },
+              ]}
+            />
+          </Body>
+          {hideHintAlert && hideCopyButton ? null : <Divider />}
+
+          {hideHintAlert ? null : (
+            <Alert
+              type="warning"
+              message={formatMessage({
+                id: 'app.setting.production.hint',
+              })}
+              icon={<NotificationOutlined />}
+              showIcon
+              style={{ marginBottom: 16 }}
             />
           )}
+
+          {hideCopyButton ? null : (
+            <CopyToClipboard
+              text={genCopySettingJson(settingState)}
+              onCopy={() =>
+                message.success(formatMessage({ id: 'app.setting.copyinfo' }))
+              }
+            >
+              <Button block>
+                <CopyOutlined /> {formatMessage({ id: 'app.setting.copy' })}
+              </Button>
+            </CopyToClipboard>
+          )}
         </div>
-      }
-      style={{
-        zIndex: 999,
-      }}
-    >
-      <div className="ant-pro-setting-drawer-content">
-        <Body
-          title={formatMessage({
-            id: 'app.setting.pagestyle',
-            defaultMessage: 'Page style setting',
-          })}
-        >
-          <BlockCheckbox
-            list={themeList.themeList}
-            value={navTheme}
-            formatMessage={formatMessage}
-            onChange={value => changeSetting('navTheme', value, hideLoading)}
-          />
-        </Body>
-
-        <ThemeColor
-          title={formatMessage({ id: 'app.setting.themecolor' })}
-          value={primaryColor}
-          colors={
-            hideColors
-              ? []
-              : themeList.colorList[navTheme === 'realDark' ? 'dark' : 'light']
-          }
-          formatMessage={formatMessage}
-          onChange={color => changeSetting('primaryColor', color, hideLoading)}
-        />
-
-        <Divider />
-
-        <Body title={formatMessage({ id: 'app.setting.navigationmode' })}>
-          <BlockCheckbox
-            formatMessage={formatMessage}
-            value={layout}
-            onChange={value => changeSetting('layout', value, hideLoading)}
-          />
-        </Body>
-        <LayoutSetting formatMessage={formatMessage} settings={settingState} changeSetting={changeSetting} />
-        <Divider />
-
-        <Body title={formatMessage({ id: 'app.setting.othersettings' })}>
-          <List
-            split={false}
-            renderItem={renderLayoutSettingItem}
-            dataSource={[
-              {
-                title: formatMessage({ id: 'app.setting.weakmode' }),
-                action: (
-                  <Switch
-                    size="small"
-                    checked={!!colorWeak}
-                    onChange={checked => changeSetting('colorWeak', checked)}
-                  />
-                ),
-              },
-            ]}
-          />
-        </Body>
-        {hideHintAlert && hideCopyButton ? null : <Divider />}
-
-        {hideHintAlert ? null : (
-          <Alert
-            type="warning"
-            message={formatMessage({
-              id: 'app.setting.production.hint',
-            })}
-            icon={<NotificationOutlined />}
-            showIcon
-            style={{ marginBottom: 16 }}
-          />
-        )}
-
-        {hideCopyButton ? null : (
-          <CopyToClipboard
-            text={genCopySettingJson(settingState)}
-            onCopy={() =>
-              message.success(formatMessage({ id: 'app.setting.copyinfo' }))
-            }
-          >
-            <Button block>
-              <CopyOutlined /> {formatMessage({ id: 'app.setting.copy' })}
-            </Button>
-          </CopyToClipboard>
-        )}
-      </div>
-    </Drawer>
+      </Drawer>
+    </ConfigProvider>
   );
 };
 
