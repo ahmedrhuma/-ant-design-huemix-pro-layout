@@ -434,51 +434,53 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
   }, [stringify(props.location)]);
 
   return (
-    <ConfigProvider direction={RTL ? 'rtl' : 'ltr'}>
-      <HelmetProvider>
-        <Helmet>
-          <title>{pageTitleInfo.title}</title>
-        </Helmet>
-      </HelmetProvider>
-      <MenuCounter.Provider>
-        <RouteContext.Provider
-          value={{
-            ...defaultProps,
-            breadcrumb: breadcrumbProps,
-            menuData,
-            isMobile,
-            collapsed,
-            isChildrenLayout: true,
-            title: pageTitleInfo.pageName,
-          }}
-        >
-          <div className={className}>
-            <Layout
-              style={{
-                minHeight: '100%',
-                ...style,
-              }}
-              hasSider
-            >
-              {siderMenuDom}
-              <Layout style={genLayoutStyle}>
-                {headerDom}
+    <>
+      <ConfigProvider direction={RTL ? 'rtl' : 'ltr'}>
+        <HelmetProvider>
+          <Helmet>
+            <title>{pageTitleInfo.title}</title>
+          </Helmet>
+        </HelmetProvider>
+        <MenuCounter.Provider>
+          <RouteContext.Provider
+            value={{
+              ...defaultProps,
+              breadcrumb: breadcrumbProps,
+              menuData,
+              isMobile,
+              collapsed,
+              isChildrenLayout: true,
+              title: pageTitleInfo.pageName,
+            }}
+          >
+            <div className={className}>
+              <Layout
+                style={{
+                  minHeight: '100%',
+                  ...style,
+                }}
+                hasSider
+              >
+                {siderMenuDom}
+                <Layout style={genLayoutStyle}>
+                  {headerDom}
 
-                <WrapContent
-                  className={contentClassName}
-                  isChildrenLayout={isChildrenLayout}
-                  {...rest}
-                  style={contentStyle}
-                >
-                  {loading ? <PageLoading /> : children}
-                </WrapContent>
-                {footerDom}
+                  <WrapContent
+                    className={contentClassName}
+                    isChildrenLayout={isChildrenLayout}
+                    {...rest}
+                    style={contentStyle}
+                  >
+                    {loading ? <PageLoading /> : children}
+                  </WrapContent>
+                  {footerDom}
+                </Layout>
               </Layout>
-            </Layout>
-          </div>
-        </RouteContext.Provider>
-      </MenuCounter.Provider>
-    </ConfigProvider>
+            </div>
+          </RouteContext.Provider>
+        </MenuCounter.Provider>
+      </ConfigProvider>
+    </>
   );
 };
 
