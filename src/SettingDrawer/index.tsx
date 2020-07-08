@@ -6,7 +6,7 @@ import {
   SettingOutlined,
 } from '@ant-design/icons';
 
-import { Button, Divider, Drawer, List, Switch, message, Alert, ConfigProvider } from 'antd';
+import { Slider, Button, Divider, Drawer, List, Switch, message, Alert, ConfigProvider } from 'antd';
 import { createBrowserHistory } from 'history';
 import { stringify, parse } from 'qs';
 import React, { useMemo, useEffect, useRef } from 'react';
@@ -144,6 +144,7 @@ const SettingDrawer: React.FC<SettingDrawerProps> = props => {
     navTheme = 'dark',
     primaryColor = 'daybreak',
     layout = 'sidemenu',
+    zoom = 0.95,
     colorWeak,
   } = settingState || {};
 
@@ -526,6 +527,10 @@ const SettingDrawer: React.FC<SettingDrawerProps> = props => {
           <LayoutSetting formatMessage={formatMessage} settings={settingState} changeSetting={changeSetting} />
           <Divider />
 
+          <Body title={formatMessage({ id: 'app.setting.zoom' })}>
+            <Slider value={zoom} onChange={value => changeSetting('zoom', value)} max={1.5} min={0.9} step={0.1} tooltipVisible />
+          </Body>
+          <Divider />
           <Body title={formatMessage({ id: 'app.setting.othersettings' })}>
             <List
               split={false}
