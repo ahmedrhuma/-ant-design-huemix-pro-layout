@@ -48,6 +48,7 @@ export interface SettingDrawerProps {
   collapse?: boolean;
   getContainer?: any;
   publicPath?: string;
+  zoom: number;
   RTL?: boolean;
   defaultHideHandler?: boolean;
   hideLoading?: boolean;
