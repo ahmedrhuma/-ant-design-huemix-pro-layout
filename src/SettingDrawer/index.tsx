@@ -13,8 +13,8 @@ import React, { useMemo, useEffect, useRef } from 'react';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import useMergeValue from 'use-merge-value';
 import omit from 'omit.js';
+import { SliderValue } from 'antd/lib/slider';
 import defaultSettings, { Settings } from '../defaultSettings';
-
 import BlockCheckbox from './BlockCheckbox';
 import ThemeColor from './ThemeColor';
 import { isBrowser, genStringToTheme } from '../utils/utils';
@@ -48,7 +48,7 @@ export interface SettingDrawerProps {
   collapse?: boolean;
   getContainer?: any;
   publicPath?: string;
-  zoom: number;
+  zoom: SliderValue;
   RTL?: boolean;
   defaultHideHandler?: boolean;
   hideLoading?: boolean;
@@ -307,7 +307,7 @@ const SettingDrawer: React.FC<SettingDrawerProps> = props => {
    */
   const changeSetting = (
     key: string,
-    value: string | boolean,
+    value: string | boolean | SliderValue,
     hideMessageLoading?: boolean,
   ) => {
     const nextState = { ...settingState };
