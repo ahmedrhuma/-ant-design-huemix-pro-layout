@@ -16,6 +16,8 @@ export interface Settings {
    */
   contentWidth: ContentWidth;
 
+  zoom: Number,
+
   /**
    * sticky header
    */
@@ -41,6 +43,7 @@ const defaultSettings: Settings = {
   contentWidth: 'Fluid',
   fixedHeader: false,
   fixSiderbar: false,
+  zoom: 0.95,
   menu: {
     locale: true,
   },
