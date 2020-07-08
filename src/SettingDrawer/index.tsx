@@ -7,7 +7,6 @@ import {
 } from '@ant-design/icons';
 
 import { Slider, Button, Divider, Drawer, List, Switch, message, Alert, ConfigProvider } from 'antd';
-import { SliderValue } from 'antd/lib/slider';
 import { createBrowserHistory } from 'history';
 import { stringify, parse } from 'qs';
 import React, { useMemo, useEffect, useRef } from 'react';
@@ -49,7 +48,7 @@ export interface SettingDrawerProps {
   collapse?: boolean;
   getContainer?: any;
   publicPath?: string;
-  zoom: SliderValue;
+  zoom: number;
   RTL?: boolean;
   defaultHideHandler?: boolean;
   hideLoading?: boolean;

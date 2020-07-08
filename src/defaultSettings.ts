@@ -1,5 +1,4 @@
 import { MenuTheme } from 'antd/es/menu/MenuContext';
-import { SliderValue } from 'antd/lib/slider';
 
 export type ContentWidth = 'Fluid' | 'Fixed';
 
@@ -17,7 +16,7 @@ export interface Settings {
    */
   contentWidth: ContentWidth;
 
-  zoom: SliderValue;
+  zoom: number;
 
   /**
    * sticky header
