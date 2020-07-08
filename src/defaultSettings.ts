@@ -16,7 +16,7 @@ export interface Settings {
    */
   contentWidth: ContentWidth;
 
-  zoom: Number,
+  zoom: number,
 
   /**
    * sticky header
