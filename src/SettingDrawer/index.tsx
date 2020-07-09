@@ -529,7 +529,7 @@ const SettingDrawer: React.FC<SettingDrawerProps> = props => {
           <Divider />
 
           <Body title={formatMessage({ id: 'app.setting.zoom' })}>
-            <Slider getTooltipPopupContainer={getContainer} value={zoom} onChange={value => changeSetting('zoom', value, hideLoading)} max={1.3} min={0.9} step={0.01} tooltipVisible />
+            <Slider value={zoom} onChange={value => changeSetting('zoom', value, hideLoading)} max={1.3} min={0.9} step={0.01} />
           </Body>
           <Divider />
           <Body title={formatMessage({ id: 'app.setting.othersettings' })}>
